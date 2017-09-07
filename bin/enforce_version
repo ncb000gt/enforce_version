@@ -4,7 +4,7 @@ var semver = require('semver');
 var argv = require('yargs').argv
 var child = require('child_process');
 
-var pkgjsonPath = './package.json';
+var pkgjsonPath = process.cwd() + '/package.json';
 if (argv.config) {
 	pkgjsonPath = argv.config;
 }
@@ -19,7 +19,6 @@ if ('engines' in pkgjson) {
 		var prog = progs[i];
 		if (ENGINES.indexOf(prog) >= 0) {
 			var ver = child.execSync(prog + ' --version', {encoding: 'utf8'});
-			console.log(prog + ':' + ver);
 			ver = ver.replace(/[^0-9\.]/gi, '');
 
 			var requiredVersion = pkgjson.engines[prog];
