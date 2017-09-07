@@ -1,0 +1,9 @@
+{
+  "name": "enforce_version",
+  "version": "0.0.1",
+  "description": "Enforce the version of 'engines' in your package.json file. Supports node and npm executables.",
+  "dependencies": {
+    "semver": "^5.4.0",
+    "yargs": "^8.0.0"
+  }
+}

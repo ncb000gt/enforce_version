@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+var semver = require('semver');
+var argv = require('yargs').argv
+var child = require('child_process');
+
+var pkgjsonPath = './package.json';
+if (argv.config) {
+	pkgjsonPath = argv.config;
+}
+
+var pkgjson = require(pkgjsonPath);
+
+var ENGINES = ['npm', 'node'];
+
+if ('engines' in pkgjson) {
+	var progs = Object.keys(pkgjson.engines);
+	for (var i = 0; i < progs.length; i++) {
+		var prog = progs[i];
+		if (ENGINES.indexOf(prog) >= 0) {
+			var ver = child.execSync(prog + ' --version', {encoding: 'utf8'});
+			console.log(prog + ':' + ver);
+			ver = ver.replace(/[^0-9\.]/gi, '');
+
+			var requiredVersion = pkgjson.engines[prog];
+
+			if (!(semver.satisfies(ver, requiredVersion))) {
+				console.warn('You have ' + prog + '@' + ver + ' installed. You need ' + requiredVersion + ' installed.');
+				process.exit(1);
+			}
+		}
+	}
+}
+
+process.exit(0);
